@@ -3,18 +3,10 @@
 $sqlpath .= "/sql-connect.php";
 include_once($sqlpath);
 
+$rating =$_REQUEST['rating'];
 $uid = $_REQUEST['uid'];
-$status = $_REQUEST['status'];
 
-if ($status == 'Finished'){
-  $findate = time();
-}
-else {
-  $findate = 0;
-}
-//$findate = 1;
-
-$sql = "UPDATE games SET status='$status', fin_date='$findate' WHERE uid LIKE '$uid'";
+$sql = "UPDATE books SET rating='$rating' WHERE uid LIKE '$uid'";
 
         if ($dbcon->query($sql) === TRUE) {
 					

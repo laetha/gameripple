@@ -57,18 +57,38 @@
                while($row = mysqli_fetch_array($compendiumdata, MYSQLI_ASSOC)) {
               $sentiment = $row['sentiment'];
               $sentdate = $row['date'];
-              $guid = $row['guid'];
+              $uid = $row['uid'];
                echo ('<tr>');
-               $sqlcompendium1 = "SELECT title,imgurl FROM games WHERE guid LIKE '$guid'";
+               $sqlcompendium1 = "SELECT title,imgurl FROM games WHERE uid LIKE '$uid'";
                $compendiumdata1 = mysqli_query($dbcon, $sqlcompendium1) or die('error getting data');
                while($row1 = mysqli_fetch_array($compendiumdata1, MYSQLI_ASSOC)) {
                  $title = $row1['title'];
                  $imgurl = $row1['imgurl'];
+                 echo ('<td><a href="game.php?id='.$uid.'"><img class="nonav" src="'.$imgurl.'" height="200px" /><br class="nonav">'.$title.'</a></td>');
+                 echo ('<td>'.$sentdate.'</td>');
+                 echo ('<td>'.$sentiment.'</td>');
+                 echo ('</tr>');
                }
-                echo ('<td><a href="game.php?id='.$guid.'"><img class="nonav" src="'.$imgurl.'" height="200px" /><br class="nonav">'.$title.'</a></td>');
-                echo ('<td>'.$sentdate.'</td>');
-                echo ('<td>'.$sentiment.'</td>');
-                echo ('</tr>');
+               $sqlcompendium1 = "SELECT title,imgurl FROM books WHERE uid LIKE '$uid'";
+               $compendiumdata1 = mysqli_query($dbcon, $sqlcompendium1) or die('error getting data');
+               while($row1 = mysqli_fetch_array($compendiumdata1, MYSQLI_ASSOC)) {
+                 $title = $row1['title'];
+                 $imgurl = $row1['imgurl'];
+                 echo ('<td><a href="book.php?id='.$uid.'"><img class="nonav" src="'.$imgurl.'" height="200px" /><br class="nonav">'.$title.'</a></td>');
+                 echo ('<td>'.$sentdate.'</td>');
+                 echo ('<td>'.$sentiment.'</td>');
+                 echo ('</tr>');
+               }
+               $sqlcompendium1 = "SELECT title,imgurl FROM movies WHERE uid LIKE '$uid'";
+               $compendiumdata1 = mysqli_query($dbcon, $sqlcompendium1) or die('error getting data');
+               while($row1 = mysqli_fetch_array($compendiumdata1, MYSQLI_ASSOC)) {
+                 $title = $row1['title'];
+                 $imgurl = $row1['imgurl'];
+                 echo ('<td><a href="movie.php?id='.$uid.'"><img class="nonav" src="'.$imgurl.'" height="200px" /><br class="nonav">'.$title.'</a></td>');
+                 echo ('<td>'.$sentdate.'</td>');
+                 echo ('<td>'.$sentiment.'</td>');
+                 echo ('</tr>');
+               }
 
              }
                ?>

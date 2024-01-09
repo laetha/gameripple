@@ -573,6 +573,11 @@
         <td></td>
     </tr>
     <tr>
+        <td>Latenna</td>
+        <td>Slumbering Wolf's Shack in Liurnia</td>
+        <td>Latenna can be found at the Slumbering Wolf's Shack, speak with her here (if you aquire the left half of the Haligtree medallion before speaking to her she will be dead here)</td>
+    </tr>
+    <tr>
         <td>Glintstone Dragon Smarag</td>
         <td>Temple Quarter in Liurnia</td>
         <td></td>
@@ -691,11 +696,6 @@
         <td>Dragonkin Soldier of Nokstella</td>
         <td>Nokstella, Eternal City in Ainsel River</td>
         <td></td>
-    </tr>
-    <tr>
-        <td>Latenna</td>
-        <td>Slumbering Wolf's Shack in Liurnia</td>
-        <td>Latenna can be found at the Slumbering Wolf's Shack, speak with her here (if you aquire the left half of the Haligtree medallion before speaking to her she will be dead here)</td>
     </tr>
     <tr>
         <td>Latenna</td>

@@ -40,16 +40,16 @@
   $stripid = str_replace("'", "", $id);
   $stripid = stripslashes($stripid);
   $id = addslashes($id);
-  $gallerypath = '/gallery/Thumbnails/';
+  $gallerypath = '/gallery/';
   $sentimentcheck = 0;
-  $sqlsentiment = "SELECT * FROM sentiments WHERE guid LIKE '$id'";
+  $sqlsentiment = "SELECT * FROM sentiments WHERE uid LIKE '$id'";
         $sentimentdata = mysqli_query($dbcon, $sqlsentiment) or die('error getting data');
         if (mysqli_num_rows($sentimentdata)!=0) { 
           $sentimentcheck = 1;
         }
 
 
-  $sqlcompendium = "SELECT * FROM games WHERE guid LIKE '$id'";
+  $sqlcompendium = "SELECT * FROM games WHERE uid LIKE '$id'";
   $compendiumdata = mysqli_query($dbcon, $sqlcompendium) or die('error getting data');
   if (mysqli_num_rows($compendiumdata)==0) { ?>
     <div class="pagetitle" id="pgtitle"></div>
@@ -61,19 +61,19 @@
   else {
   while($row = mysqli_fetch_array($compendiumdata, MYSQLI_ASSOC)) {
     $title = $row['title'];
-    $titleclean = str_replace(":", "", $title);
+    //$titleclean = str_replace(":", "", $title);
+    $titleclean = htmlspecialchars($title);
+    //echo $titleclean;
     $rating = $row['rating'];
     $gallery = $row['gallery'];
     $galleryclean = addslashes($gallery);
     $playlist = $row['playlist'];
     $review = $row['review'];
-    $capPath = $_SERVER['DOCUMENT_ROOT'].'/gallery/Thumbnails/Captures/';
+    $capPath = $_SERVER['DOCUMENT_ROOT'].'/gallery/Captures/';
     $capFiles = scandir($capPath);
-
-
   }
   if (isset($gallery) && $gallery !== ''){
-        $path = $_SERVER['DOCUMENT_ROOT'].'/gallery/Thumbnails/'.$gallery.'/';
+        $path = $_SERVER['DOCUMENT_ROOT'].'/gallery/'.$gallery.'/';
         if (is_dir($path)){
         $files = scandir($path);
         }
@@ -99,30 +99,12 @@
       }
       
   else {
-    if (is_dir($_SERVER['DOCUMENT_ROOT'].'/gallery/Thumbnails/'.$titleclean) == true){
-      $path = $_SERVER['DOCUMENT_ROOT'].'/gallery/Thumbnails/'.$titleclean.'/';
-        $files = scandir($path);
-        $gallery = $titleclean;
+    $freshtitle = htmlspecialchars_decode($titleclean);
+    $path = $_SERVER["DOCUMENT_ROOT"]."/gallery/".$freshtitle;
+    if (is_dir($path)){
+      echo $titleclean;
+    $files = scandir($path);
     }
-    /*else {
-      $tempfiles = scandir($capPath);
-      $temp2files = array();
-      foreach($tempfiles as $file){
-        $file = addslashes($file);
-        if (strpos($file,'.png') !== false || strpos($file,'.jpg') !== false || strpos($file,'.jpeg') !== false || strpos($file,'.jxr') !== false){
-          if (strpos($file,$titleclean) !== false){
-            $galleryclean = 'Captures';
-            array_push($temp2files, $file);
-          }
-        }
-      }
-      if (empty($temp2files)){
-
-      }
-      else {
-        $files = $temp2files;
-      }
-    }*/
   }        
 
   ?>
@@ -192,7 +174,7 @@
           // ### gallery settings ### 
           thumbnailHeight:  180,
           thumbnailWidth:   320,
-          itemsBaseURL:     '<?php echo $gallerypath.$gallery; ?>/',
+          itemsBaseURL:     "<?php echo $gallerypath.$freshtitle; ?>/",
           galleryDisplayMode: 'pagination',
           galleryMaxRows: 6,
           viewerZoom: false,
@@ -244,7 +226,7 @@
         ?>
 
           <?php
-            $sqlsentiment = "SELECT * FROM sentiments WHERE guid LIKE '$id'";
+            $sqlsentiment = "SELECT * FROM sentiments WHERE uid LIKE '$id'";
             $sentimentdata = mysqli_query($dbcon, $sqlsentiment) or die('error getting data');
             while($row = mysqli_fetch_array($sentimentdata, MYSQLI_ASSOC)) {
               echo ('<p><span class="sentiment">"'.nl2br($row['sentiment']).'"</span> - '.$row['date'].'</p>');
@@ -263,7 +245,7 @@
        <tr>
          <td class="buttoncell">
          <?php
-            $sqlcompendium = "SELECT * FROM games WHERE guid LIKE '$id' AND active=1";
+            $sqlcompendium = "SELECT * FROM games WHERE uid LIKE '$id' AND active=1";
             $compendiumdata = mysqli_query($dbcon, $sqlcompendium) or die('error getting data');
             if (mysqli_num_rows($compendiumdata)==0) { 
               $gallery = '';
@@ -281,7 +263,7 @@
 <div class="dropdown">
   <button class="btn btn-primary dropdown-toggle" type="button" id="gameStatus" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
     <?php
-  $sqlcompendium = "SELECT status FROM games WHERE guid LIKE '$id'";
+  $sqlcompendium = "SELECT status FROM games WHERE uid LIKE '$id'";
                $compendiumdata = mysqli_query($dbcon, $sqlcompendium) or die('error getting data');
                if (mysqli_num_rows($compendiumdata)==0) {
                 echo 'Status';
@@ -335,7 +317,7 @@ function updateGallery(){
   $.ajax({
   url : 'updateGallery.php',
   type: 'GET',
-  data : { "guid" : gameID, "gallery" : gameGallery },
+  data : { "uid" : gameID, "gallery" : gameGallery },
   success: function()
   {
       //if success then just output the text to the status div then clear the form inputs to prepare for new data
@@ -462,7 +444,7 @@ function addGame(){
   $.ajax({
     url : 'addgame.php',
     type: 'GET',
-    data : { "title" : gameTitle, "guid" : gameID, "gameImage" : gameImage, "gallery" : gameGallery },
+    data : { "title" : gameTitle, "uid" : gameID, "gameImage" : gameImage, "gallery" : gameGallery },
     success: function()
     {
         //if success then just output the text to the status div then clear the form inputs to prepare for new data
@@ -492,7 +474,7 @@ function statusChange(value){
   $.ajax({
   url : 'changestatus.php',
   type: 'GET',
-  data : { "guid" : gameID, "status" : gameStatus },
+  data : { "uid" : gameID, "status" : gameStatus },
   success: function()
   {
       //if success then just output the text to the status div then clear the form inputs to prepare for new data
@@ -514,7 +496,7 @@ var gameID = '<?php echo $id; ?>';
 $.ajax({
   url : 'removegame.php',
   type: 'GET',
-  data : { "guid" : gameID },
+  data : { "uid" : gameID },
   success: function()
   {
       //if success then just output the text to the status div then clear the form inputs to prepare for new data
@@ -538,9 +520,9 @@ const formatYmd = date => date.toISOString().slice(0, 10);
 var today = formatYmd(new Date());
 
 $.ajax({
-  url : 'addsentiment.php',
+  url : 'gamesentiment.php',
   type: 'GET',
-  data : { "sentimentText" : sentimentText, "guid" : gameID, "sentDate" : today },
+  data : { "sentimentText" : sentimentText, "uid" : gameID, "sentDate" : today },
   success: function()
   {
       $("#sentimentText").val('');
@@ -567,7 +549,7 @@ function rateGame(value){
   $.ajax({
   url : 'rategame.php',
   type: 'GET',
-  data : { "guid" : gameID, "rating" : gameRating },
+  data : { "uid" : gameID, "rating" : gameRating },
   success: function()
   {
       //if success then just output the text to the status div then clear the form inputs to prepare for new data

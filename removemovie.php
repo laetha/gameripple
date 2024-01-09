@@ -4,17 +4,9 @@ $sqlpath .= "/sql-connect.php";
 include_once($sqlpath);
 
 $uid = $_REQUEST['uid'];
-$status = $_REQUEST['status'];
 
-if ($status == 'Finished'){
-  $findate = time();
-}
-else {
-  $findate = 0;
-}
-//$findate = 1;
 
-$sql = "UPDATE games SET status='$status', fin_date='$findate' WHERE uid LIKE '$uid'";
+$sql = "UPDATE movies SET active=0 WHERE uid LIKE '$uid'";
 
         if ($dbcon->query($sql) === TRUE) {
 					

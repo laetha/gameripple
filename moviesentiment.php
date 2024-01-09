@@ -3,26 +3,23 @@
 $sqlpath .= "/sql-connect.php";
 include_once($sqlpath);
 
+
 $uid = $_REQUEST['uid'];
-$status = $_REQUEST['status'];
+$sentimenttemp = $_REQUEST['sentimentText'];
+$sentiment=htmlentities(trim(addslashes($sentimenttemp)));
+$sentDate = $_REQUEST['sentDate'];
+$t = time();
 
-if ($status == 'Finished'){
-  $findate = time();
-}
-else {
-  $findate = 0;
-}
-//$findate = 1;
-
-$sql = "UPDATE games SET status='$status', fin_date='$findate' WHERE uid LIKE '$uid'";
+$sql = "INSERT INTO sentiments(uid,sentiment,date,timestamp)
+				VALUES('$uid','$sentiment','$sentDate','$t')";
 
         if ($dbcon->query($sql) === TRUE) {
 					
         }
 				else {
-
+          
         }
-
+      
 //Footer
 $footpath = $_SERVER['DOCUMENT_ROOT'];
 $footpath .= "/footer.php";

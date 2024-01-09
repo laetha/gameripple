@@ -4,13 +4,14 @@ $sqlpath .= "/sql-connect.php";
 include_once($sqlpath);
 
 
-$guid = $_REQUEST['guid'];
+$uid = $_REQUEST['uid'];
 $sentimenttemp = $_REQUEST['sentimentText'];
 $sentiment=htmlentities(trim(addslashes($sentimenttemp)));
 $sentDate = $_REQUEST['sentDate'];
+$t = time();
 
-$sql = "INSERT INTO sentiments(guid,sentiment,date)
-				VALUES('$guid','$sentiment','$sentDate')";
+$sql = "INSERT INTO sentiments(uid,sentiment,date,timestamp)
+				VALUES('$uid','$sentiment','$sentDate','$t')";
 
         if ($dbcon->query($sql) === TRUE) {
 					
@@ -18,7 +19,7 @@ $sql = "INSERT INTO sentiments(guid,sentiment,date)
 				else {
           
         }
-      
+
 //Footer
 $footpath = $_SERVER['DOCUMENT_ROOT'];
 $footpath .= "/footer.php";

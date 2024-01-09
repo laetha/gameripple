@@ -6,26 +6,25 @@ include_once($sqlpath);
 $titletemp =$_REQUEST['title'];
 $title=htmlentities(trim(addslashes($titletemp)));
 $uid = $_REQUEST['uid'];
-$imgurl = $_REQUEST['gameImage'];
-$gallery = $_REQUEST['gallery'];
+$imgurl = $_REQUEST['bookImage'];
 $t = time();
 
 
-$sqlcompendium = "SELECT * FROM games WHERE uid LIKE '$uid'";
+$sqlcompendium = "SELECT * FROM books WHERE uid LIKE '$uid'";
             $compendiumdata = mysqli_query($dbcon, $sqlcompendium) or die('error getting data');
             if (mysqli_num_rows($compendiumdata)==0) {
-$sql = "INSERT INTO games(title,uid,status,fin_date,rating,active,gallery,playlist,review,imgurl,timestamp)
-				VALUES('$title','$uid','Unplayed',0,0,1,'$gallery','','','$imgurl','$t')";
+$sql = "INSERT INTO books(title,uid,status,fin_date,rating,active,review,imgurl,timestamp)
+        VALUES('$title','$uid','Unread',0,0,1,'','$imgurl','$t')";
 
         if ($dbcon->query($sql) === TRUE) {
 					
         }
-				else {
-          
-        }
+        else {
+   
+          }
       }
       else {
-        $sql = "UPDATE games SET active=1 WHERE uid LIKE '$uid'";
+        $sql = "UPDATE books SET active=1 WHERE uid LIKE '$uid'";
 
         if ($dbcon->query($sql) === TRUE) {
 					

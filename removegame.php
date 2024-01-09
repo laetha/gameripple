@@ -3,10 +3,10 @@
 $sqlpath .= "/sql-connect.php";
 include_once($sqlpath);
 
-$guid = $_REQUEST['guid'];
+$uid = $_REQUEST['uid'];
 
 
-$sql = "UPDATE games SET active=0 WHERE guid LIKE '$guid'";
+$sql = "UPDATE games SET active=0 WHERE uid LIKE '$uid'";
 
         if ($dbcon->query($sql) === TRUE) {
 					

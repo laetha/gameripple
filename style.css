@@ -23,6 +23,15 @@ div.body {
 	margin-top: 10px;
 }
 
+.byline {
+	font-family: 'Helvetica', sans-serif;
+	text-align: right;
+	font-family: arial;
+	font-weight: bold;
+	color: #b3b3b3;
+	font-size: 20px;
+}
+
 .mainbox {
 	background-color: #1F2123;
 	text-align:center;

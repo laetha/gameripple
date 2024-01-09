@@ -4,9 +4,9 @@ $sqlpath .= "/sql-connect.php";
 include_once($sqlpath);
 
 $rating =$_REQUEST['rating'];
-$guid = $_REQUEST['guid'];
+$uid = $_REQUEST['uid'];
 
-$sql = "UPDATE games SET rating='$rating' WHERE guid LIKE '$guid'";
+$sql = "UPDATE games SET rating='$rating' WHERE uid LIKE '$uid'";
 
         if ($dbcon->query($sql) === TRUE) {
 					

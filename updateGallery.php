@@ -3,12 +3,12 @@
 $sqlpath .= "/sql-connect.php";
 include_once($sqlpath);
 
-$guid = $_REQUEST['guid'];
+$uid = $_REQUEST['uid'];
 $gallery = $_REQUEST['gallery'];
 $gallery = addslashes($gallery);
 
 
-$sql = "UPDATE games SET gallery='$gallery' WHERE guid LIKE '$guid'";
+$sql = "UPDATE games SET gallery='$gallery' WHERE uid LIKE '$uid'";
 
         if ($dbcon->query($sql) === TRUE) {
 					

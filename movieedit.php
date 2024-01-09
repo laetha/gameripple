@@ -33,68 +33,26 @@ if (!empty($_GET['id'])) {
   if (!in_array($tmp_action, $disallowed_paths) /*&& file_exists("world/{$tmp_action}.php")*/)
         $id = $tmp_action;
         $id = addslashes($id);
-        $worldedit = "SELECT * FROM games WHERE uid LIKE '$id'";
+        $worldedit = "SELECT * FROM movies WHERE uid LIKE '$id'";
         $editdata = mysqli_query($dbcon, $worldedit) or die('error getting data');
         while($editrow =  mysqli_fetch_array($editdata, MYSQLI_ASSOC)) {
          echo '<div class="pagetitle" id="pgtitle"> Edit - '.$editrow['title'].'</div><p>';
          $editid = $editrow['id'];
          $uid = $editrow['uid'];
-         $gallery = $editrow['gallery'];
-         $galleryclean = addslashes($gallery);
-         $playlist = $editrow['playlist'];
          $review = $editrow['review'];
 
-          
-        $path = $_SERVER['DOCUMENT_ROOT'].'/gallery/Thumbnails/'.$gallery.'/';
-        $files = scandir($path);
+
 ?>
 
         <div class="col-md-10 col-centered">
          <div class="col-sm-6 typebox col-centered" id="name">
-             <form method="post" action="gameeditprocess.php" id="import" enctype="multipart/form-data">
+             <form method="post" action="movieeditprocess.php" id="import" enctype="multipart/form-data">
              <input type="hidden" name="id" id="id" value="<?php echo $id; ?>">
              <input type="hidden" name="uid" id="uid" value="<?php echo $uid; ?>">
-             <div class="text">Gallery Folder</div><input class="textbox" style="text-align:center;" type="text" name="gallery" id="gallery" value="<?php echo $gallery; ?>"><p>
-             <div class="text">Playlist URL</div><input class="textbox" style="text-align:center;" type="text" name="playlist" id="playlist" value="<?php echo $playlist; ?>">
 
              </div>
              <dic class="col-sm-10 col-centered typebox">
-             <div class="nonav" id="nanogallery2"></div>
-             <script>
-   jQuery(document).ready(function () {
-        jQuery("#nanogallery2").nanogallery2( {
-          // ### gallery settings ### 
-          thumbnailHeight:  180,
-          thumbnailWidth:   320,
-          itemsBaseURL:     '/gallery/Thumbnails/' + '<?php echo $galleryclean; ?>/',
-          galleryDisplayMode: 'pagination',
-          galleryMaxRows: 5,
-          viewerZoom:false,
-          viewerTools:    {
-        topLeft:    'pageCounter',
-        topRight:   'linkOriginalButton, zoomButton, fullscreenButton, closeButton'
-      },
-          // ### gallery content ### 
-          items: [
-            <?php
-              foreach ($files as $img){
-                if (strpos($img,'.png') !== false || strpos($img,'.jpg') !== false || strpos($img,'.jpeg') !== false){
-                echo ("{ src: '".$img."' },");
-                }
-              }
 
-            ?>
-            ]
-        });
-    });
-
-    function addimg(){
-   
-   $('#nanogallery2').removeClass('nonav');
-   $('#nanogallery2').nanogallery2('refresh');
- 
- }
-</script>
              <div class="text col-centered col-md-12">Review<textarea type="text" name="review" id="review"><?php 
              if ($review == ''){
                
@@ -114,7 +72,7 @@ if (!empty($_GET['id'])) {
        ?>
        <div class="col-centered">
        <input class="btn btn-primary col-centered inline" type="submit" value="Save">
-       <a class="clean" href="/game.php?id=<?php echo $id; ?>"><button class="btn btn-danger col-centered inline" type="button">Cancel</button></a>
+       <a class="clean" href="/movie.php?id=<?php echo $id; ?>"><button class="btn btn-danger col-centered inline" type="button">Cancel</button></a>
        </div>
       </form>
 
@@ -130,17 +88,6 @@ if (!empty($_GET['id'])) {
 
 <script>
 var simplemde = new SimpleMDE({ element: document.getElementById("review") });
-
-$(document).ready(function(){
-
-  $(".fa-question-circle").after('<i class="separator">|</i><a title="Image from Gallery" tabindex="-1" class="fa fa-picture-o" onclick="addimg()"></a>');
-
-  //var imgurl; 
-		$('.nGY2GThumbnailIconsFullThumbnail').click(function(){
-		//	imgurl = $(this).attr('src');
-			$('#test').html('imgurl');
-		});
-});
 
 </script>
 

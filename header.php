@@ -31,12 +31,12 @@ else {
 		<link rel="stylesheet" type="text/css" href="/selectize/css/selectize.default.css" />
 
 
-		<title id="tabTitle"><?php echo $pgtitle; ?>GameRipple</title>
+		<title id="tabTitle"><?php echo $pgtitle; ?>MediaRipple</title>
 		
 	</head>
 	<!--<body id="headbody" style="background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),  url(/assets/images/bg/<?php echo $selectedBg; ?>) no-repeat center center fixed;	-webkit-background-size: cover;	-moz-background-size: cover;	-o-background-size: cover;	background-size: cover;	opacity:0.9;"> -->
 	<body id="headbody" style="background-color: #2d2d2d; opacity: 0.8;">
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js" tpye="text/javascript"></script>
+		<script src="/jquery-3.3.1.min.js" tpye="text/javascript"></script>
 		<script src="/selectize/js/standalone/selectize.min.js" tpye="text/javascript"></script>
 		<script src="/selectize/js/list.js" tpye="text/javascript"></script>
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" tpye="text/javascript"></script>
@@ -87,10 +87,20 @@ else {
 				<li class="topsearch">
 				<select id="search">
 					<option value=""></option>
-					
 					</select>
 				</li>
-				<li><a href="games.php">Games</a></li>
+
+				<li class="dropdown">
+		 			<a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false" id="searchType">Games<span class="caret"></span></a>
+					 <ul class="dropdown-menu">
+      					<li><a class="dropdown-item" onClick="changeSearch('Games')">Games</a></li>
+      					<li><a class="dropdown-item" onClick="changeSearch('Books')">Books</a></li>
+      					<li><a class="dropdown-item" onClick="changeSearch('Movies')">Movies</a></li>
+						<li><a class="dropdown-item" onClick="changeSearch('TV')">TV</a></li>
+		</ul>
+				</li>
+
+				<li><a href="media.php">My Media</a></li>
 				<li><a href="gallery.php">Gallery</a></li>
 				<li><a href="sentiments.php">Sentiments</a></li>
 
@@ -112,8 +122,26 @@ else {
 	  </script>
     </div>
 				<script type="text/javascript">
+
+	var searchType = 'Games';
 			//	var title;
-				$('#search').selectize({
+
+	function changeSearch(mediaType){
+  		$('#searchType').html(mediaType + '<span class="caret"></span>');
+		searchType = mediaType;
+		refreshSearch(mediaType);
+	}
+
+	$(document).ready(function () {
+		changeSearch('Games');
+	});
+
+
+function refreshSearch(searchType){
+	$('#search').selectize()[0].selectize.destroy();
+
+if (searchType == 'Games'){
+	$('#search').selectize({
     valueField: 'guid',
     labelField: 'name',
     searchField: 'name',
@@ -129,7 +157,6 @@ else {
 			var releaseYear = releaseDate.slice(0,4);
 			var comboRelease = releaseYear.concat(releaseDate1);
 			var finalRelease = comboRelease.replace('null','');
-			//var finalRelease = releaseYear;
 			
             return '<div>' +
                 '<img src="' + escape(item.image.small_url) + '" alt="" height="100px" style="margin-right:20px;">' +
@@ -151,8 +178,8 @@ else {
             data: {
                 q: query,
                 page_limit: 10,
-                apikey: GBKey/*,
-				field_list: "name,guid,image.small_url"*/
+                apikey: GBKey
+
             },
             error: function() {
                 callback();
@@ -168,9 +195,177 @@ else {
 	}
 	
 
-});
-				</script>
+}); 
+}
 
+if (searchType == 'Books'){
+
+$('#search').selectize({
+    valueField: 'id',
+    labelField: 'title',
+    searchField: 'title',
+	maxOptions: 8,
+    options: [],
+    create: false,
+    render: {
+        option: function(item, escape) {
+			var baseURL = 'https://googleapis.com/books/v1/volumes';
+    		var apiKey = GoogleKey;
+			var releaseDate = escape(item.publishedDate);
+			var releaseYear = releaseDate.slice(0,4);
+			var iamgeLink = '';
+			if (item.imageLinks === undefined){
+				imageLink = '';
+			}
+			else {
+				imageLink = item.imageLinks.thumbnail;
+			}
+			
+            return '<div>' +
+                '<img src="' + escape(imageLink) + '" alt="" height="100px" style="margin-right:20px;">' +
+                '<span class="name">' +
+                    '<span class="title">' + escape(item.title) + ' - ('+
+					escape(item.authors) + ' - ' +
+					releaseYear + ')</span>' +
+                '</span>' +                
+            '</div>';
+        }
+    },
+    load: function(query, callback) {
+        if (!query.length) return callback();
+        $.ajax({
+            url: 'https://www.googleapis.com/books/v1/volumes?q=+intitle:' + query + '&printType=books&maxResults=8&key='+ GoogleKey,
+            type: 'GET',
+            dataType: 'json',
+            error: function() {
+                callback();
+            },
+            success: function(jsonData) {
+				var fullData = jsonData.items;
+				var res = [];
+
+				//take the 'ID' value out of the top level and put it in the 'volumeInfo' level.
+				for (var i in fullData){
+					let id = fullData[i].id;
+					fullData[i].volumeInfo['id'] = id;
+					res.push([i,fullData[i].volumeInfo]);
+				}
+                callback(res);
+				//console.log(res);
+            }
+        });
+    },
+	onChange: function(value){
+					
+					window.location.href = '/book.php?id=' + value;
+	}
+	
+
+}); 
+
+}
+
+if (searchType == 'Movies'){
+
+$('#search').selectize({
+    valueField: 'id',
+    labelField: 'title',
+    searchField: 'title',
+	maxOptions: 8,
+    options: [],
+    create: false,
+    render: {
+        option: function(item, escape) {
+			var baseURL = 'https://api.themoviedb.org/3/search/movie';
+    		//var apiKey = tmdbKey;
+			var releaseDate = escape(item.release_date);
+			var releaseYear = releaseDate.slice(0,4);
+			var imageLink = escape(item.poster_path);
+			
+            return '<div>' +
+                '<img src="https://image.tmdb.org/t/p/original' + escape(imageLink) + '" alt="" height="100px" style="margin-right:20px;">' +
+                '<span class="name">' +
+                    '<span class="title">' + escape(item.original_title) + ' - ('+
+					releaseYear + ')</span>' +
+                '</span>' +                
+            '</div>';
+        }
+    },
+    load: function(query, callback) {
+        if (!query.length) return callback();
+        $.ajax({
+            url: 'https://api.themoviedb.org/3/search/movie?query=' + query + '&api_key=1a4c153e771e6a97876ae286242ccb40',
+            type: 'GET',
+            dataType: 'json',
+			error: function() {
+                callback();
+            },
+            success: function(res) {
+                callback(res.results);
+            }
+        });
+    },
+	onChange: function(value){
+					
+					window.location.href = '/movie.php?id=' + value;
+	}
+	
+
+}); 
+}
+
+if (searchType == 'TV'){
+
+$('#search').selectize({
+    valueField: 'id',
+    labelField: 'original_name',
+    searchField: 'original_name',
+	maxOptions: 8,
+    options: [],
+    create: false,
+    render: {
+        option: function(item, escape) {
+			var baseURL = 'https://api.themoviedb.org/3/search/tv';
+    		//var apiKey = tmdbKey;
+			var releaseDate = escape(item.first_air_date);
+			var releaseYear = releaseDate.slice(0,4);
+			var imageLink = escape(item.poster_path);
+			
+            return '<div>' +
+                '<img src="https://image.tmdb.org/t/p/original' + escape(imageLink) + '" alt="" height="100px" style="margin-right:20px;">' +
+                '<span class="name">' +
+                    '<span class="title">' + escape(item.original_name) + ' - ('+
+					releaseYear + ')</span>' +
+                '</span>' +                
+            '</div>';
+        }
+    },
+    load: function(query, callback) {
+        if (!query.length) return callback();
+        $.ajax({
+            url: 'https://api.themoviedb.org/3/search/tv?query=' + query + '&api_key=1a4c153e771e6a97876ae286242ccb40',
+            type: 'GET',
+            dataType: 'json',
+			error: function() {
+                callback();
+            },
+            success: function(res) {
+                callback(res.results);
+            }
+        });
+    },
+	onChange: function(value){
+					
+					window.location.href = '/tv.php?id=' + value;
+	}
+	
+
+}); 
+}
+
+}
+
+		</script>
 			</div><!-- /.container-fluid -->
 		</nav>
 

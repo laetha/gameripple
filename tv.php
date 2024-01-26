@@ -96,7 +96,8 @@
           }
           ?>
        </div>
-
+       <div class="col-md-12" id="latest"><h3 style="text-align:center; color:#356A8E; margin-top:0px; margin-bottom:10px;">Latest Watched Episodes</h3></div>
+       <hr class="horule">
        <?php
         if ($sentimentcheck = 1 && $review == ''){
           echo ('<div class="tab-pane fade in active" id="sentimentstab">');
@@ -120,8 +121,6 @@
        </div>
        <?php } ?>
 
-       <div class="col-md-12" id="latest"><h3 style="text-align:center; color:#356A8E; margin-top:0px; margin-bottom:10px;">Latest Watched Episodes</h3></div>
-       <hr class="horule">
        <div class="col-md-12" id="cast"><h3 style="text-align:center; color:#356A8E; margin-top:0px;">Cast</h3></div>
 
      </div>
@@ -208,12 +207,19 @@ var tvInfo;
  *  @param object callbacks specify any custom callbacks.
  */
       		$.getJSON('https://api.themoviedb.org/3/tv/' + '<?php echo $id; ?>' + '?api_key=1a4c153e771e6a97876ae286242ccb40', function (data){
-            var title = data.original_name;
+            var title = data.name;
+            var originalTitle = data.original_name;
             var publishedDate = data.first_air_date;
+            var original_language = data.original_language;
             publishedDate = publishedDate.slice(0,4);
             var image = 'https://image.tmdb.org/t/p/original' + data.poster_path;
             var description = data.overview;
-            $('#pgtitle').html(title);
+            if (originalTitle == title){
+              $('#pgtitle').html(title);
+            }
+            else {
+              $('#pgtitle').html(title + ' (' + originalTitle + ')');
+            }
             $('#deck').html(description);
             $('#byline').html(publishedDate);
             $('#poster').html('<img src="' + image + '" style="max-height:400px;"/>');

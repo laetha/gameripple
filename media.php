@@ -5,7 +5,7 @@
    include_once($sqlpath);
 
    //Header
-   $pgtitle = 'Games - ';
+   $pgtitle = 'Media - ';
    $headpath = $_SERVER['DOCUMENT_ROOT'];
    $headpath .= "/header.php";
    include_once($headpath);
@@ -24,8 +24,8 @@
      <!-- Page Header -->
      <div class="col-md-12">
      <div class="pagetitle" id="pgtitle">My Media</div>
-     <button class="btn btn-primary" id="compact" onclick="compact('compact')">Compact</button>
-     <button class="btn btn-primary nonav" id="expanded" onclick="compact('expanded')">Expanded</button>
+     <button class="btn btn-primary nonav" id="compact" onclick="compact('compact')">Compact</button>
+     <button class="btn btn-primary" id="expanded" onclick="compact('expanded')">Expanded</button>
    </div>
      <div class="body sidebartext col-xs-12" id="body">
        <div class="table-responsive">
@@ -35,6 +35,8 @@
                    <th scope="col">Title</th>
 
                    <th scope="col">Media Type</th>
+
+                   <th scope="col">Timestamp</th>
 
                    <th scope="col">Status</th>
 
@@ -55,6 +57,8 @@
              <th scope="col">Title</th>
 
              <th scope="col">Media Type</th>
+
+             <th scope="col">Timestamp</th>
 
               <th scope="col">Status</th>
 
@@ -85,11 +89,20 @@
                $review = $row['review'];
                $playlist = $row['playlist'];
                $uid = $row['uid'];
-               echo ('<td><a href="game.php?id='.$uid.'"><img src="'.$imgurl.'" height="200px" /><br>'.$title.'</a></td>');
+
+               $dir = 'gallery/';
+               $imgdir = $dir.$title;
+
+               echo ('<td><a href="game.php?id='.$uid.'"><img class="nonav" src="'.$imgurl.'" height="200px" /><br class="nonav">'.$title.'</a></td>');
                echo "<td>".$mediaType."</td>";
+               $timestamp = $row['timestamp'];
+               echo ('<td>'.$timestamp.'</td>');
                echo "<td>".$status."</td>";
                echo "<td>".$rating."</td>";
                if ($gallery !== ''){
+                echo ('<td class="green">Yes</td>');
+               }
+               else if (is_dir($imgdir)) {
                 echo ('<td class="green">Yes</td>');
                }
                else {
@@ -139,8 +152,10 @@
                $review = $row['review'];
                $playlist = '';
                $uid = $row['uid'];
-               echo ('<td><a href="book.php?id='.$uid.'"><img src="'.$imgurl.'" height="200px" /><br>'.$title.'</a></td>');
+               echo ('<td><a href="book.php?id='.$uid.'"><img class="nonav" src="'.$imgurl.'" height="200px" /><br class="nonav">'.$title.'</a></td>');
                echo "<td>".$mediaType."</td>";
+               $timestamp = $row['timestamp'];
+               echo ('<td>'.$timestamp.'</td>');
                echo "<td>".$status."</td>";
                echo "<td>".$rating."</td>";
                if ($gallery !== ''){
@@ -193,8 +208,10 @@
              $review = $row['review'];
              $playlist = '';
              $uid = $row['uid'];
-             echo ('<td><a href="movie.php?id='.$uid.'"><img src="'.$imgurl.'" height="200px" /><br>'.$title.'</a></td>');
+             echo ('<td><a href="movie.php?id='.$uid.'"><img class="nonav" src="'.$imgurl.'" height="200px" /><br class="nonav">'.$title.'</a></td>');
              echo "<td>".$mediaType."</td>";
+             $timestamp = $row['timestamp'];
+             echo ('<td>'.$timestamp.'</td>');
              echo "<td>".$status."</td>";
              echo "<td>".$rating."</td>";
              if ($gallery !== ''){
@@ -246,8 +263,10 @@
            $review = $row['review'];
            $playlist = '';
            $uid = $row['uid'];
-           echo ('<td><a href="tv.php?id='.$uid.'"><img src="'.$imgurl.'" height="200px" /><br>'.$title.'</a></td>');
+           echo ('<td><a href="tv.php?id='.$uid.'"><img class="nonav" src="'.$imgurl.'" height="200px" /><br class="nonav">'.$title.'</a></td>');
            echo "<td>".$mediaType."</td>";
+           $timestamp = $row['timestamp'];
+           echo ('<td>'.$timestamp.'</td>');
            echo "<td>".$status."</td>";
            echo "<td>".$rating."</td>";
            if ($gallery !== ''){
@@ -282,6 +301,7 @@
            }
            $sentiments = 0;
            
+
            echo "</tr>";
 
          }
@@ -318,7 +338,12 @@ $(document).ready(function() {
     } );
 
     // DataTable
-    var table = $('#library').DataTable();
+    var table = $('#library').DataTable(
+      {
+        order: [[2, 'desc']],
+        pageLength: [[25]]
+      }
+    );
 
     // Apply the search
     table.columns().every( function () {

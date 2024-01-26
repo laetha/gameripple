@@ -156,7 +156,43 @@ $.ajax({
 
 </script>
 
-  
+<div class="col-xs-12">
+    <h2>Latest</h2>
+    <?php
+      $alllatest = array();
+      $sqllatest = "SELECT title, timestamp, imgurl, uid FROM books ORDER BY timestamp DESC LIMIT 7";
+      $latestdata = mysqli_query($dbcon, $sqllatest) or die('error getting data');
+      while ($row = mysqli_fetch_array($latestdata, MYSQLI_ASSOC)){
+        
+        array_push($alllatest, $row['timestamp'].'::'.$row['title'].'::'.$row['imgurl'].'::book::'.$row['uid']);
+      }
+      $sqllatest = "SELECT title, timestamp, imgurl, uid FROM tv ORDER BY timestamp DESC LIMIT 7";
+      $latestdata = mysqli_query($dbcon, $sqllatest) or die('error getting data');
+      while ($row = mysqli_fetch_array($latestdata, MYSQLI_ASSOC)){
+        
+        array_push($alllatest, $row['timestamp'].'::'.$row['title'].'::'.$row['imgurl'].'::tv::'.$row['uid']);
+      }
+      $sqllatest = "SELECT title, timestamp, imgurl, uid FROM movies ORDER BY timestamp DESC LIMIT 7";
+      $latestdata = mysqli_query($dbcon, $sqllatest) or die('error getting data');
+      while ($row = mysqli_fetch_array($latestdata, MYSQLI_ASSOC)){
+        
+        array_push($alllatest, $row['timestamp'].'::'.$row['title'].'::'.$row['imgurl'].'::movie::'.$row['uid']);
+      }
+      $sqllatest = "SELECT title, timestamp, imgurl, uid FROM games ORDER BY timestamp DESC LIMIT 7";
+      $latestdata = mysqli_query($dbcon, $sqllatest) or die('error getting data');
+      while ($row = mysqli_fetch_array($latestdata, MYSQLI_ASSOC)){
+        
+        array_push($alllatest, $row['timestamp'].'::'.$row['title'].'::'.$row['imgurl'].'::game::'.$row['uid']);
+      }
+      rsort($alllatest);
+      $latestentry = array();
+        for ($x=0; $x<=5; $x++){
+          $latestentry = explode('::', $alllatest[$x]);
+          //echo $latestentry[3];
+          echo ('<div class="col-md-2 col-xs-3"><a href="'.$latestentry[3].'.php?id='.$latestentry[4].'">'.$latestentry[1].'</a><br><img src="'.$latestentry[2].'" style="width:100%;" /></div>');
+      }
+    ?>
+</div>
 <div class="col-xs-12">
 <h3>Activity Feed</h3>
 <?php

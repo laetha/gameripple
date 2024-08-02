@@ -1198,7 +1198,7 @@ code {
 .rating>label {
     position: relative;
     width: 1em;
-    font-size: 3vw;
+    font-size: 2em;
     color: #FFD600;
     cursor: pointer
 }
@@ -1277,7 +1277,7 @@ code {
 
 .sentiment {
 	font-style: italic;
-	font-size: 25px;
+	font-size: 1.3em;
 }
 
 .topright {
@@ -1308,3 +1308,8 @@ code {
 	height: 5px;
 	margin-bottom:15px;
   }
+
+.thumbimg {
+	height: 70px;
+	margin-bottom: 7px;
+}

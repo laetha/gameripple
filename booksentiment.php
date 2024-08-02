@@ -6,7 +6,7 @@ include_once($sqlpath);
 
 $uid = $_REQUEST['uid'];
 $sentimenttemp = $_REQUEST['sentimentText'];
-$sentiment=htmlentities(trim(addslashes($sentimenttemp)));
+$sentiment=html_entity_decode(trim(addslashes($sentimenttemp)));
 $sentDate = $_REQUEST['sentDate'];
 $t = time();
 

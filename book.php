@@ -125,7 +125,7 @@
      <div class="sidebartext col-md-4" style="text-align:right;">
      <span style="width:100%;" id="poster"></span><br>
      <div class="byline" id="byline"></div>
-     <table align="right">
+     <div class="col=xs-12"><table align="right">
        <tr>
          <td class="buttoncell">
          <?php
@@ -178,13 +178,13 @@
 </td>
 </tr>
 
-</table>
-     <div class="col-md-12 disabled" id="starRatings"><div class="rating"><input type="radio" name="rating" value="5" id="5" onClick="rateBook('5')"><label for="5">☆</label> <input type="radio" name="rating" value="4" id="4" onClick="rateBook('4')"><label for="4">☆</label> <input type="radio" name="rating" value="3" id="3" onClick="rateBook('3')"><label for="3">☆</label> <input type="radio" name="rating" value="2" id="2" onClick="rateBook('2')"><label for="2">☆</label> <input type="radio" name="rating" value="1" id="1"><label for="1" onClick="rateBook('1')">☆</label>
+</table></div>
+     <div class="col-xs-12 disabled" id="starRatings"><div class="rating"><input type="radio" name="rating" value="5" id="5" onClick="rateBook('5')"><label for="5">☆</label> <input type="radio" name="rating" value="4" id="4" onClick="rateBook('4')"><label for="4">☆</label> <input type="radio" name="rating" value="3" id="3" onClick="rateBook('3')"><label for="3">☆</label> <input type="radio" name="rating" value="2" id="2" onClick="rateBook('2')"><label for="2">☆</label> <input type="radio" name="rating" value="1" id="1"><label for="1" onClick="rateBook('1')">☆</label>
 </div>
 <p>
 <button class="btn btn-info" onClick="addSentiment()">Sentiment</button>
 <div id="sentiment" style="display:none;">
-<textarea id="sentimentText" style="width:70%; height: 70px; margin-right:0px;"></textarea>
+<textarea id="sentimentText" style="width:100%; height: 140px; margin-right:0px;"></textarea>
 <br>
 <button class="btn btn-success" onClick="saveSentiment()">Save</button>
 </div>

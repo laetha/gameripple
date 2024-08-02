@@ -74,12 +74,15 @@
   }
   if (isset($gallery) && $gallery !== ''){
         $path = $_SERVER['DOCUMENT_ROOT'].'/gallery/'.$gallery.'/';
+        $freshtitle = $gallery;
         if (is_dir($path)){
         $files = scandir($path);
+        $files = array_reverse($files);
         }
         else {
           $tempfiles = scandir($capPath);
           $temp2files = array();
+          $temp2files = array_reverse($temp2files);
           foreach($tempfiles as $file){
             $file = addslashes($file);
             if (strpos($file,'.png') !== false || strpos($file,'.jpg') !== false || strpos($file,'.jpeg') !== false || strpos($file,'.jxr') !== false){
@@ -104,6 +107,7 @@
     if (is_dir($path)){
       echo $titleclean;
     $files = scandir($path);
+    $files = array_reverse($files);
     }
   }        
 
@@ -125,6 +129,7 @@
        }
        if (isset($files)){
         echo ('<li><a data-toggle="tab" href="#gallerytab" onclick="showGallery()">Gallery</a></li>');
+        $galleryexist = 1;
         }
 
         if ($sentimentcheck == 1){
@@ -155,7 +160,7 @@
          ?>
        </div>
        <?php
-       if (isset($gallery) && $gallery !== '' && $review == ''){
+       if ($galleryexist = 1){
        
             echo ('<div class="tab-pane fade in active" id="gallerytab">');
           }
@@ -241,6 +246,9 @@
 
      <div class="sidebartext col-md-4" style="text-align:right;">
      <span style="width:100%;" id="gameposter"></span>
+     <div class="col-md-12 disabled" id="starRatings"><div class="rating"><input type="radio" name="rating" value="5" id="5" onClick="rateGame('5')"><label for="5">☆</label> <input type="radio" name="rating" value="4" id="4" onClick="rateGame('4')"><label for="4">☆</label> <input type="radio" name="rating" value="3" id="3" onClick="rateGame('3')"><label for="3">☆</label> <input type="radio" name="rating" value="2" id="2" onClick="rateGame('2')"><label for="2">☆</label> <input type="radio" name="rating" value="1" id="1"><label for="1" onClick="rateGame('1')">☆</label>
+</div>
+     <div class="col-md-12">
      <table align="right">
        <tr>
          <td class="buttoncell">
@@ -294,9 +302,8 @@
 </td>
 </tr>
 
-</table>
-     <div class="col-md-12 disabled" id="starRatings"><div class="rating"><input type="radio" name="rating" value="5" id="5" onClick="rateGame('5')"><label for="5">☆</label> <input type="radio" name="rating" value="4" id="4" onClick="rateGame('4')"><label for="4">☆</label> <input type="radio" name="rating" value="3" id="3" onClick="rateGame('3')"><label for="3">☆</label> <input type="radio" name="rating" value="2" id="2" onClick="rateGame('2')"><label for="2">☆</label> <input type="radio" name="rating" value="1" id="1"><label for="1" onClick="rateGame('1')">☆</label>
-</div>
+</table></div>
+
 <p>
 <button class="btn btn-info" onClick="addSentiment()">Sentiment</button>
 <div id="sentiment" style="display:none;">

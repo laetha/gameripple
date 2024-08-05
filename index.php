@@ -9,9 +9,7 @@
    $headpath = $_SERVER['DOCUMENT_ROOT'];
    $headpath .= "/header.php";
    include_once($headpath);
-   /*if ($loguser !== 'tarfuin') {
-   echo ('<script>window.location.replace("/oops.php"); </script>');
- }*/
+
    ?>
    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js" type="text/javascript"></script>
    <script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap.min.js" type="text/javascript"></script>
@@ -56,7 +54,7 @@
       </div>
 </div>
 
-<div class="col-xs-12">
+<div class="col-xs-12 smallpadding">
 <h3>Activity Feed</h3>
 <div id="activityFeed"></div>
 
@@ -74,9 +72,7 @@
       doneArray.push(value);
       if (doneArray.includes('g') && doneArray.includes('t') && doneArray.includes('m') && doneArray.includes('b') && doneCount == allLatest.length - 1){
         getLatest(allLatest);
-        //console.log('doneCount = ' + doneCount + '. allLatest = ' + (allLatest.length - 1));
       }
-      //console.log('allDone has been called ' + doneCount + ' times');
     }
 
         // Latest Games
@@ -150,19 +146,18 @@
             }
           });
           }
-          /*else {
-            showCount[showTitle] = showCount[showTitle] + 1;
-          }*/
+
         }
       
-      //getMovies();
       });
     }
 
     function getMovies(){
     //Latest Movies
     $.getJSON('https://tautulli.bkconnor.com/api/v2?apikey=fYxHkXMoVO4O3QGeOboahtLKl2PazxiS&cmd=get_history&user_id=4821142&length=5&media_type=movie', function (data){
-      for (let i = 0; i < 5; i++){ 
+      let x = 0;
+      for (let i = 0; i < 5; i++){
+
         let movDate = data.response.data.data[i].date;
         let movTitle = data.response.data.data[i].full_title;
         let ratingKey = data.response.data.data[i].rating_key;
@@ -170,14 +165,15 @@
         allLatest.push(movDate + 'm');
         allLatest.sort();
         allLatest.reverse();
-
         var getMoviesDetails = new Array(movDate,movTitle,ratingKey,movThumb);
         movList[i] = getMoviesDetails;
+    if (!$('#' + ratingKey + '_href').length){  
       
-      if (i < 3){
+      if (x <= 2){
         $('#movLatest').append('<a id="' + ratingKey + '_href" class="grid-row" href="movie.php"><div><div id="' + ratingKey + 'thumb" class="showthumb"></div></div><div>' + movTitle + '</div></tr>');
+        x = x + 1;
       }
-    
+    }
       $.ajax({
             url: 'https://api.themoviedb.org/3/search/movie?query=' + movTitle + '&api_key=1a4c153e771e6a97876ae286242ccb40',
             type: 'GET',
@@ -196,7 +192,8 @@
                 allDone('m');
             }
           });
-        }
+        
+      }
     //getBooks();
   });
 }
@@ -229,34 +226,16 @@ function getBooks(){
   function getThumb(ratingKey,backdrop,type){
     let imgpath = 'assets/images/' + ratingKey + '.png';
     var thumbID = '#' + ratingKey + 'thumb';
-/*
-    $.ajax({
-    url:imgpath,
-    type:'HEAD',
-    error: function()
-    {*/
+
            // Episode Thumbs
       $.getJSON('https://tautulli.bkconnor.com/api/v2?apikey=fYxHkXMoVO4O3QGeOboahtLKl2PazxiS&cmd=get_metadata&rating_key=' + ratingKey, function (data){
       var epThumb = data.response.data.thumb; 
-      //var overview = data.response.data.summary;
-      //var overviewID = '#' + ratingKey + 'overview';
-      //var backdropID = '#' + ratingKey + 'backdrop';
+
       $(thumbID).html('<img class="thumbimg" src="https://tautulli.bkconnor.com/pms_image_proxy?img=' + epThumb + '" />');
-      //$('#feed' + x).append('<div id="' + '' + 'box" class="col-md-10 col-sm-8 col-xs-12"><div class="col-md-7 movoverview" id="' + movKey + 'overview"></div><div class="col-md-5 movbackdrop" id="' + movKey + 'backdrop"></div></div>');
-      //$(overviewID).html('<blockquote>' + overview + '</blockquote>');
-      //$(backdropID).html('<img class="thumbimg" src="https://image.tmdb.org/t/p/original' + backdrop + '" />');
+
       thumbCount = thumbCount + 1;
     });
-  /* },
-    success: function()
-    {
-      $(thumbID).html('<img class="thumbimg" src="' + imgpath + '" />');
-      //$(overviewID).html('<blockquote>' + overview + '</blockquote>');
-      //$(backdropID).html('<img class="thumbimg" src="https://image.tmdb.org/t/p/original' + backdrop + '" />');
-      thumbCount = thumbCount + 1;
-      console.log('getThumb called ' + thumbCount + ' times. This time for ' + ratingKey + ', a ' + type);
-    }
-});*/
+
 
   }
 
@@ -266,7 +245,7 @@ function getBooks(){
     //var currentShows = new array();
     for (let x = 0; x < feedTimes.length; x++){
       
-        $('#activityFeed').append('<div id="feed' + x + '" class="col-xs-12 nonav" style="padding-bottom: 25px;"></div>');
+        $('#activityFeed').append('<div id="feed' + x + '" class="col-xs-12 nonav nopadding" style="padding-bottom: 25px;"></div>');
       
       let currentFeed = feedTimes[x];
       var currentTimestamp = currentFeed.substring(0, currentFeed.length - 1);
@@ -315,7 +294,7 @@ function getBooks(){
           }
 
           if ($('#' + currentShowKey + 'ep' + currentKey).length == 0){
-            $('#' + currentShowKey + 'box').append('<div class="col-md-4 col-sm-6 col-xs-6" id="' + currentShowKey + 'ep' + currentKey + '">S' + currentSeason + ':E' + currentEpNumber + ': ' + currentEp + '<div id="' + currentKey + 'thumb" class="epthumb"></div></div>');
+            $('#' + currentShowKey + 'box').append('<div class="col-md-4 col-sm-6 col-xs-6" id="' + currentShowKey + 'ep' + currentKey + '">S' + currentSeason + ':E' + currentEpNumber + ':<br /> ' + currentEp + '<div id="' + currentKey + 'thumb" class="epthumb"></div></div>');
               getThumb(currentKey,'','',currentShowKey + 'ep' + currentEp);
               showCount[currentShow] = showCount[currentShow] + 1;
               $('#test').html(showCount['Brooklyn Nine-Nine']);
@@ -377,6 +356,15 @@ function getBooks(){
 </div>
 
 <style>
+
+.smallpadding {
+  padding: 0;
+}
+
+.smallpadding div{
+  padding: 0 2px 0 2px;
+}
+
 .showthumb .thumbimg {
 	height: 70px;
 	margin-bottom: 7px;
